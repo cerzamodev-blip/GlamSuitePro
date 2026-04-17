@@ -3060,31 +3060,30 @@ function renderGastos(){
       </tr>`;
     }).join('');
 }
-
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
-<script>
-function init(){
-  renderLoginUsers();
-  const pais = PAISES.find(p => p.id === DB.config.pais);
-}
 </script>
 
+<!-- ══════════════════════════════════════
+     INIT
+══════════════════════════════════════ -->
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
 
 <script>
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+
+function init(){
+  renderLoginUsers();
+  const pais = PAISES.find(p => p.id === DB.config.pais);
+}
+
+// SUPABASE CLIENT
 const supabase = window.supabase.createClient(
   "https://gbcpwmljirwpzwedgyjk.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiY3B3bWxqaXJ3cHp3ZWRneWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjI1MjQsImV4cCI6MjA5MjAzODUyNH0.AHhsLv3-CAJDNf84gJ0LzIef0b9jesl5NUclI6DoXOg"
+  "TU_PUBLIC_ANON_KEY"
 );
-</script>
 
-<!-- INICIAR APP -->
-<script>
+// INICIAR APP
 init();
 </script>
-
-</body>
-</html>
