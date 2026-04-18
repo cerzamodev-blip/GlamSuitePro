@@ -125,7 +125,7 @@ input,select,textarea,button{font-family:'Inter',sans-serif;font-size:inherit}
 
 /* ══ MAIN CONTENT ══ */
 .main-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--bg)}
-.content{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.content{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}.content:has(#p-pos.act){padding:0;overflow:hidden}
 @media(min-width:768px){.content{padding:20px 22px}}
 
 /* ══ BOTTOM NAV (mobile only) ══ */
@@ -246,17 +246,20 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 .toast.ok{background:#1E6B47}.toast.err{background:#B22222}.toast.w{background:#A0611A}
 
 /* ══ POS LAYOUT ══ */
-.pos-wrap{display:grid;grid-template-columns:1fr 440px;gap:16px;height:calc(100dvh - var(--top) - 54px);overflow:hidden;align-items:stretch}
+/* ══ POS REDESIGN ══ */
+.pos-wrap{display:grid;grid-template-columns:420px 1fr;gap:0;height:calc(100dvh - var(--top) - var(--bot));overflow:hidden;align-items:stretch;background:var(--bg)}
+@media(max-width:767px){.pos-wrap{grid-template-columns:1fr;height:auto;overflow:visible}}
 #p-pos .ph{margin-bottom:8px}
 #p-pos>.content{padding-bottom:0}
 @media(max-width:900px){.pos-wrap{grid-template-columns:1fr;height:auto;overflow:visible}}
-.pos-left{display:flex;flex-direction:column;gap:10px;overflow:hidden;min-height:0;height:100%}
-@media(max-width:900px){.pos-left{overflow:visible;min-height:0}}
-.pos-cat-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
-@media(max-width:900px){.pos-cat-scroll{max-height:50vmax}}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;padding:2px}
+.pos-left{display:flex;flex-direction:column;overflow:hidden;min-height:0;height:100%}
+@media(max-width:767px){.pos-left{overflow:visible;min-height:0}}
+.pos-cat-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:10px}
+@media(max-width:767px){.pos-cat-scroll{max-height:55vmax}}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
 @media(max-width:400px){.pgrid{grid-template-columns:repeat(2,1fr)}}
-.pc{background:var(--card);border-radius:var(--r);border:1.5px solid var(--divider);padding:12px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;-webkit-user-select:none;user-select:none}
+.pc{background:var(--card);border-radius:var(--r);border:1.5px solid var(--divider);padding:11px 12px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;-webkit-user-select:none;user-select:none;min-height:72px;display:flex;flex-direction:column;justify-content:space-between}
+.pc:active{transform:scale(.96);opacity:.85}
 .pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .pc.srv::before{background:var(--gold)}.pc.prd::before{background:var(--gold-m)}.pc.pkg::before{background:var(--teal)}
 .pc:active{transform:scale(.97);border-color:var(--gold)}
@@ -267,11 +270,11 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 .pc-dur{font-size:10px;color:var(--ink4);margin-top:1px}
 
 /* CART */
-.cart-panel{background:var(--card);border-radius:var(--rlg);border:1.5px solid var(--divider);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--sh);min-height:0}
-@media(max-width:900px){.cart-panel{border-radius:var(--r)}}
-.cart-head{padding:11px 14px;border-bottom:1px solid var(--divider);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cart-panel{background:var(--card);border-right:1px solid var(--divider);display:flex;flex-direction:column;overflow:hidden;min-height:0;height:100%}
+@media(max-width:767px){.cart-panel{border-right:none;border-bottom:1px solid var(--divider);height:auto}}
+.cart-head{padding:12px 16px;background:var(--pearl);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .cart-cnt{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#1A1A1A;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.cart-meta{padding:8px 13px;border-bottom:1px solid var(--ink5);display:grid;grid-template-columns:1fr 1fr;gap:7px;flex-shrink:0}
+.cart-meta{padding:8px 13px;border-bottom:1px solid var(--ink5);display:flex;flex-direction:column;gap:6px;flex-shrink:0}
 /* CLIENT SEARCH IN CART */
 .cl-search-wrap{position:relative}
 .cl-search-wrap input{width:100%;height:34px;border:1.5px solid var(--ink5);border-radius:var(--r);padding:0 10px 0 30px;font-size:13px;outline:none;transition:border-color .15s;background:var(--card);color:var(--pearl)}
@@ -283,8 +286,8 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 .cl-opt:hover{background:rgba(184,151,77,.07)}
 .cl-opt-av{width:24px;height:24px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#1A1A1A;font-size:9px;font-weight:700;flex-shrink:0}
 .cl-opt-add{color:var(--gold);font-weight:600}
-.cart-items{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 12px;min-height:60px;flex:1}
-@media(max-width:900px){.cart-items{flex:none;max-height:240px;min-height:60px}}
+.cart-items{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 10px;min-height:60px;flex:1}
+@media(max-width:767px){.cart-items{flex:none;max-height:200px;min-height:60px}}
 .ci{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--divider)}
 .ci:last-child{border-bottom:none}
 .ci-nm{flex:1;font-size:12px;font-weight:500;min-width:0}
@@ -296,17 +299,19 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 .ci-pr{font-family:'Inter',monospace;font-size:12px;font-weight:500;min-width:54px;text-align:right}
 .rb{width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:var(--ink4);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .rb:active{background:var(--red-l);color:var(--red)}
-.cart-totals{padding:8px 14px;border-top:1px solid var(--divider);flex-shrink:0}
-.trow{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);padding:1px 0}
-.trow.fin{font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:var(--pearl);padding-top:7px;margin-top:3px;border-top:1.5px solid var(--divider)}
+.cart-totals{padding:8px 12px;border-top:1px solid var(--divider);flex-shrink:0;background:var(--bg)}
+.trow{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);padding:2px 0}
+.trow.fin{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;color:var(--pearl);padding-top:8px;margin-top:4px;border-top:2px solid var(--pearl)}
 .trow .mono{font-family:'Inter',monospace;font-size:inherit;font-weight:inherit}
 .trow.disc{color:#4CAF87}
 .pay-sect{padding:8px 13px;border-top:1px solid var(--ink5);flex-shrink:0}
-.pay-lbl{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:6px}
-.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-.pmb{height:28px;padding:0 6px;border:1.5px solid var(--divider);border-radius:var(--rsm);background:var(--bg);font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:.03em;color:var(--ink3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap;transition:all .15s;-webkit-user-select:none;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pay-lbl{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:8px}
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pmb{height:38px;padding:0 8px;border:1.5px solid var(--divider);border-radius:var(--r);background:var(--bg);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.03em;color:var(--ink3);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;white-space:nowrap;transition:all .15s;-webkit-user-select:none;overflow:hidden;min-width:0}
+.pmb .pmb-ic{font-size:14px;line-height:1}
+.pmb .pmb-nm{font-size:8px;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center}
 /* MULTI-PAY LINE */
-.pay-lines-grid{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.pay-lines-grid{display:flex;flex-direction:column;gap:6px;margin-top:0}
 .pay-line{display:flex;flex-direction:column;gap:4px;padding:7px 9px;background:var(--bg);border-radius:var(--r);border:1px solid var(--divider)}
 .pay-line-row1{display:flex;align-items:center;gap:5px}
 .pay-line-lbl{font-size:11px;font-weight:600;color:var(--pearl);display:flex;align-items:center;gap:3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -323,10 +328,10 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 .pay-line-rm:hover{background:var(--red-l);color:var(--red)}
 .pmb.sel{border-color:var(--gold);background:rgba(184,151,77,.10);color:var(--gold-d)}
 .com-bar{display:flex;justify-content:space-between;align-items:center;padding:5px 13px;background:rgba(184,151,77,.06);border-top:1px solid var(--divider);flex-shrink:0}
-.cart-foot{padding:8px 13px 12px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
-.btn-cobrar{width:100%;height:44px;border-radius:var(--r);border:none;background:var(--pearl);color:#FFFFFF;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .18s;touch-action:manipulation}
+.cart-foot{padding:8px 12px 10px;display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.btn-cobrar{width:100%;height:48px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--teal),#1B5C41);color:#FFFFFF;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .18s;touch-action:manipulation;box-shadow:0 2px 8px rgba(42,122,90,.3)}
 .btn-cobrar:active{opacity:.9;transform:scale(.99)}
-.btn-cobrar:disabled{background:var(--ink5);color:var(--ink4)}
+.btn-cobrar:disabled{background:var(--ink5);color:var(--ink4);box-shadow:none}
 
 /* ══ SERVICIOS ══ */
 .svc-card{background:var(--card);border-radius:var(--rlg);border:1px solid var(--divider);padding:13px 15px;display:flex;align-items:center;gap:11px;transition:all .18s}
@@ -477,6 +482,16 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 .nh-ic{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .nh-ic.wa{background:rgba(37,211,102,.12)}
 .nh-ic.gm{background:rgba(234,67,53,.09)}
+
+/* ══ PROPINA ══ */
+.propina-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.propina-btn{height:36px;border:1.5px solid var(--divider);border-radius:var(--r);background:var(--bg);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--ink3)}
+.propina-btn.act{border-color:var(--gold);background:rgba(184,151,77,.12);color:var(--gold-d)}
+.propina-custom{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+/* ══ POS TOPBAR ══ */
+.pos-topbar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--divider);flex-shrink:0;background:var(--bg)}
+.pos-cat-btn{height:30px;padding:0 12px;border-radius:20px;border:1.5px solid var(--divider);background:transparent;font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--ink3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.pos-cat-btn.act{background:var(--pearl);border-color:var(--pearl);color:#fff}
 </style>
 </head>
 <body>
@@ -611,78 +626,67 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 </div>
 
 <!-- ══ POS ══ -->
-<div class="panel" id="p-pos">
-  <div class="ph" style="margin-bottom:10px">
-    <div class="ph-left"><div class="ph-title">Punto de Venta</div></div>
-    <div class="ph-acts" style="flex:1;max-width:300px">
-      <div class="srch" style="width:100%"><input type="text" placeholder="Buscar servicio..." id="pos-srch" oninput="renderPOSGrid()" autocomplete="off"></div>
-    </div>
-  </div>
-  <div id="pos-rate-banner" style="display:none;background:rgba(184,151,77,.08);border:1px solid rgba(184,151,77,.25);border-radius:var(--rsm);padding:7px 13px;margin-bottom:10px;align-items:center;justify-content:space-between;font-size:12px">
-    <span>💱 <strong id="pos-rate-lbl">—</strong> · <span style="color:var(--ink3)" id="pos-rate-fecha"></span></span>
-    <button class="btn sm" style="height:24px;padding:0 8px;font-size:9px" onclick="go('config');setCfgTab('dolar',document.querySelector('.cfg-tab:nth-child(5)'))">Actualizar tasa</button>
-  </div>
+<div class="panel" id="p-pos" style="padding:0;margin:0;height:calc(100dvh - var(--top) - var(--bot));overflow:hidden">
   <div class="pos-wrap">
-    <div class="pos-left">
-      <div style="display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0">
-        <button class="btn sm" style="border-radius:20px" id="pt-all" onclick="setPOScat('all')">Todos</button>
-        <button class="btn sm" style="border-radius:20px" id="pt-srv" onclick="setPOScat('srv')">Servicios</button>
-        <button class="btn sm" style="border-radius:20px" id="pt-prd" onclick="setPOScat('prd')">Productos</button>
-        <button class="btn sm" style="border-radius:20px" id="pt-pkg" onclick="setPOScat('pkg')">Paquetes</button>
-      </div>
-      <div class="pos-cat-scroll"><div class="pgrid" id="pos-grid"></div></div>
-    </div>
+    <!-- LEFT: CART -->
     <div class="cart-panel">
-      <div class="cart-head"><span style="font-size:14px;font-weight:600">Venta actual</span><span class="cart-cnt" id="cart-cnt">0</span></div>
+      <div class="cart-head">
+        <span class="cart-head-title">Venta actual</span>
+        <span class="cart-cnt" id="cart-cnt">0</span>
+      </div>
       <div class="cart-meta">
-        <!-- CLIENT SEARCH WITH AUTOCOMPLETE -->
-        <div class="fg">
-          <div class="flbl">Cliente</div>
-          <div class="cl-search-wrap" id="cl-sw">
-            <input type="text" id="pos-cl-srch" placeholder="Buscar o escribir nombre..." autocomplete="off"
-              oninput="clientSearch(this.value)" onfocus="clientSearch(this.value)" onblur="setTimeout(()=>hideClDrop(),200)">
-            <div class="cl-dropdown" id="cl-dropdown"></div>
-          </div>
-          <input type="hidden" id="pos-cl-id">
+        <div class="cl-search-wrap" id="cl-sw">
+          <input type="text" id="pos-cl-srch" placeholder="👤 Cliente..." autocomplete="off"
+            oninput="clientSearch(this.value)" onfocus="clientSearch(this.value)" onblur="setTimeout(()=>hideClDrop(),200)"
+            style="height:34px;font-size:13px">
+          <div class="cl-dropdown" id="cl-dropdown"></div>
         </div>
-        <div class="fg">
-          <div class="flbl">Estilista</div>
-          <select class="fsl" id="pos-est" onchange="updateTotals()" style="height:34px;font-size:13px;background:var(--card);color:var(--pearl)"><option value="">— Seleccionar —</option></select>
-        </div>
+        <input type="hidden" id="pos-cl-id">
+        <select class="fsl" id="pos-est" onchange="updateTotals()" style="height:34px;font-size:13px;background:var(--card);color:var(--pearl)">
+          <option value="">✂️ Estilista...</option>
+        </select>
       </div>
-      <div class="cart-items" id="cart-items"><div style="text-align:center;padding:20px;color:var(--ink4);font-size:12px">Agrega servicios al carrito</div></div>
-      <div style="padding:7px 13px;border-top:1px solid var(--ink5);display:flex;gap:6px;flex-shrink:0">
-        <input type="text" class="fi" id="promo-inp" placeholder="Código promo / Gift Card" style="font-family:'Inter',monospace;font-size:12px;height:34px;text-transform:uppercase" autocomplete="off">
-        <button class="btn sm" onclick="applyPromo()">Aplicar</button>
+      <div class="cart-items" id="cart-items">
+        <div style="text-align:center;padding:24px 12px;color:var(--ink4);font-size:12px">Agrega servicios al carrito</div>
       </div>
-      <div id="promo-badge-row" style="display:none;padding:3px 13px;flex-shrink:0">
+      <!-- Promo -->
+      <div style="padding:6px 10px;border-top:1px solid var(--ink5);display:flex;gap:5px;flex-shrink:0">
+        <input type="text" class="fi" id="promo-inp" placeholder="🏷️ Promo / Gift Card" style="font-family:'Inter',monospace;font-size:12px;height:30px;text-transform:uppercase" autocomplete="off">
+        <button class="btn sm" style="height:30px" onclick="applyPromo()">Aplicar</button>
+      </div>
+      <div id="promo-badge-row" style="display:none;padding:2px 10px;flex-shrink:0">
         <span class="badge b-teal" id="promo-badge-lbl"></span>
-        <button onclick="removePromo()" style="background:none;border:none;cursor:pointer;color:var(--ink4);font-size:15px;margin-left:5px;line-height:1">×</button>
+        <button onclick="removePromo()" style="background:none;border:none;cursor:pointer;color:var(--ink4);font-size:15px;margin-left:4px;line-height:1">×</button>
       </div>
+      <!-- Totals -->
       <div class="cart-totals">
         <div class="trow"><span>Subtotal</span><span class="mono" id="ct-sub">—</span></div>
         <div class="trow disc" id="ct-disc-row" style="display:none"><span>Descuento</span><span class="mono" id="ct-disc">—</span></div>
         <div class="trow" style="color:var(--ink4)"><span id="ct-tax-lbl">Impuesto</span><span class="mono" id="ct-tax">—</span></div>
-        <div class="trow fin"><span>Total</span><span class="mono" id="ct-total">—</span></div>
-      <div id="ct-total-usd" style="text-align:right;font-size:11px;color:var(--ink4);margin-top:2px;font-family:'Inter',monospace"></div>
+        <div class="trow fin"><span>TOTAL</span><span class="mono" id="ct-total">—</span></div>
+        <div id="ct-total-usd" style="text-align:right;font-size:10px;color:var(--ink4);margin-top:1px;font-family:'Inter',monospace"></div>
       </div>
-      <div class="pay-sect">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div class="pay-lbl" style="margin-bottom:0">Método de pago</div>
-          <button class="btn sm" style="height:24px;padding:0 8px;font-size:9px;border-radius:20px" onclick="addPayLine()">+ Agregar</button>
-        </div>
-        <div class="pay-grid" id="pay-grid"></div>
-        <div id="pay-lines" class="pay-lines-grid"></div>
-        <div id="pay-remaining" style="display:none;font-size:11px;font-weight:600;color:var(--gold-d);margin-top:5px;text-align:right"></div>
-      </div>
-      <div class="com-bar" id="com-bar" style="display:none">
-        <span style="font-size:11px;color:var(--gold);font-weight:500">Comisión</span>
-        <span style="font-family:'Inter',monospace;font-size:12px;font-weight:600;color:var(--gold)" id="com-amt">—</span>
-      </div>
+      <!-- Cobrar -->
       <div class="cart-foot">
-        <button class="btn-cobrar" id="btn-cobrar" onclick="openCobrar()" disabled>Cobrar</button>
-        <button class="btn sm" style="width:100%;justify-content:center;color:var(--red)" onclick="clearCart()">✕ Cancelar venta</button>
+        <button class="btn-cobrar" id="btn-cobrar" onclick="openCobrar()" disabled>💳 Cobrar</button>
+        <button class="btn sm" style="width:100%;justify-content:center;color:var(--ink3);height:30px;font-size:10px" onclick="clearCart()">✕ Cancelar venta</button>
       </div>
+    </div>
+    <!-- RIGHT: PRODUCTS -->
+    <div class="pos-left">
+      <!-- Topbar: search + categories + rate -->
+      <div class="pos-topbar">
+        <div class="srch" style="flex:1;max-width:220px"><input type="text" placeholder="Buscar..." id="pos-srch" oninput="renderPOSGrid()" autocomplete="off"></div>
+        <button class="pos-cat-btn act" id="pt-all" onclick="setPOScat('all')">Todos</button>
+        <button class="pos-cat-btn" id="pt-srv" onclick="setPOScat('srv')">Servicios</button>
+        <button class="pos-cat-btn" id="pt-prd" onclick="setPOScat('prd')">Productos</button>
+        <button class="pos-cat-btn" id="pt-pkg" onclick="setPOScat('pkg')">Paquetes</button>
+        <div id="pos-rate-banner" style="display:none;align-items:center;gap:6px;font-size:11px;margin-left:auto">
+          <span>💱 <strong id="pos-rate-lbl">—</strong></span>
+          <span style="color:var(--ink4);font-size:10px" id="pos-rate-fecha"></span>
+        </div>
+      </div>
+      <div class="pos-cat-scroll"><div class="pgrid" id="pos-grid"></div></div>
     </div>
   </div>
 </div>
@@ -1401,29 +1405,68 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 </div></div>
 
 <!-- Cobro POS -->
-<div class="overlay" id="m-cobro"><div class="modal modal-sm">
-  <div class="modal-title">Confirmar cobro</div>
-  <div style="text-align:center;padding:14px 16px;background:var(--bg);border-radius:var(--r);margin-bottom:12px;border:1px solid var(--divider)">
-    <div style="font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:4px">Total a cobrar</div>
-    <div id="cobro-tot" style="font-size:32px;font-weight:700;color:var(--pearl)">—</div>
-    <div id="cobro-usd" style="font-size:12px;color:var(--gold);margin-top:2px"></div>
+<div class="overlay" id="m-cobro" style="align-items:flex-end">
+  <div class="modal" style="border-radius:20px 20px 0 0;max-width:520px;margin:0 auto;padding:0;overflow:hidden">
+    <!-- Header -->
+    <div style="background:var(--pearl);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:2px">Total a cobrar</div>
+        <div id="cobro-tot" style="font-size:32px;font-weight:700;color:#fff;font-family:'Inter',sans-serif;line-height:1">—</div>
+        <div id="cobro-usd" style="font-size:11px;color:var(--gold);margin-top:3px"></div>
+      </div>
+      <button onclick="closeM('m-cobro')" style="width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>
+    </div>
+    <div style="padding:16px 18px;overflow-y:auto;max-height:72vh">
+      <!-- Métodos de pago -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="pay-lbl" style="margin-bottom:0">Toca para agregar método</div>
+        <button class="btn sm" style="height:24px;padding:0 10px;font-size:9px;border-radius:20px;color:var(--red)" onclick="clearPayLines()">✕ Limpiar</button>
+      </div>
+      <div class="pay-grid" id="pay-grid" style="margin-bottom:10px"></div>
+      <!-- Líneas activas -->
+      <div id="pay-lines" class="pay-lines-grid"></div>
+      <!-- Resumen pendiente / cambio -->
+      <div id="pay-remaining" style="display:none;font-size:13px;font-weight:700;margin:8px 0 4px;text-align:right;padding:8px 12px;border-radius:var(--rsm)"></div>
+      <!-- Propina -->
+      <div class="sdiv"></div>
+      <div class="pay-lbl">Propina (opcional)</div>
+      <div class="propina-grid">
+        <button class="propina-btn" onclick="setPropina(0)">Sin propina</button>
+        <button class="propina-btn" onclick="setPropina(5)">5%</button>
+        <button class="propina-btn" onclick="setPropina(10)">10%</button>
+        <button class="propina-btn" onclick="setPropina(15)">15%</button>
+      </div>
+      <div class="propina-custom">
+        <div style="font-size:11px;color:var(--ink3);white-space:nowrap">Personalizada:</div>
+        <input type="number" class="fi" id="propina-monto" placeholder="0.00" min="0" step="0.01"
+          style="height:32px;font-size:13px;font-family:'Inter',monospace;font-weight:600"
+          oninput="setPropinaCustom(this.value)" inputmode="decimal">
+        <div class="pay-cur-toggle" style="height:32px">
+          <button class="pay-cur-btn act" id="prop-cur-local" onclick="setPropinaMoneda('local')" style="height:32px">Bs.</button>
+          <button class="pay-cur-btn" id="prop-cur-usd" onclick="setPropinaMoneda('USD')" style="height:32px">USD</button>
+        </div>
+      </div>
+      <div id="propina-display" style="display:none;background:rgba(184,151,77,.08);border:1px solid rgba(184,151,77,.2);border-radius:var(--rsm);padding:8px 12px;font-size:12px;color:var(--gold-d);font-weight:600;margin-bottom:10px;text-align:center"></div>
+      <!-- Efectivo recibido -->
+      <div id="cobro-ef-fld" style="display:none">
+        <div class="sdiv"></div>
+        <div class="pay-lbl">Efectivo recibido</div>
+        <input type="number" class="fi" id="cobro-rec" placeholder="0.00" oninput="calcCambio()"
+          style="font-family:'Inter',monospace;font-size:16px;font-weight:700;margin-bottom:8px" inputmode="decimal">
+        <div id="cobro-cambio" style="display:none;background:rgba(42,122,90,.08);border-radius:var(--rsm);padding:9px 12px;justify-content:space-between;border:1px solid rgba(42,122,90,.2)">
+          <span style="font-size:13px;color:var(--teal-d);font-weight:600">Cambio a devolver</span>
+          <span style="font-family:'Inter',monospace;font-size:16px;font-weight:700;color:var(--teal-d)" id="cobro-cambio-v">—</span>
+        </div>
+      </div>
+      <!-- Multi-pay breakdown -->
+      <div id="cobro-multipay" style="display:none;background:var(--bg);border-radius:var(--r);padding:10px 12px;margin-top:10px;border:1px solid var(--divider)"></div>
+    </div>
+    <!-- Footer -->
+    <div style="padding:12px 18px 20px;border-top:1px solid var(--divider);background:var(--card)">
+      <button class="btn t" onclick="confirmarVenta()" style="width:100%;height:48px;justify-content:center;font-weight:700;font-size:14px;border-radius:var(--r)">✓ Confirmar cobro</button>
+    </div>
   </div>
-  <!-- Multi-pay breakdown -->
-  <div id="cobro-multipay" style="display:none;background:var(--bg);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;border:1px solid var(--divider)"></div>
-  <!-- Efectivo change -->
-  <div class="fg" id="cobro-ef-fld" style="margin-bottom:10px">
-    <div class="flbl">Monto recibido en efectivo</div>
-    <input type="number" class="fi" id="cobro-rec" placeholder="0.00" oninput="calcCambio()" style="font-family:'Inter',monospace;font-size:16px;font-weight:700" inputmode="decimal">
-  </div>
-  <div id="cobro-cambio" style="display:none;background:rgba(42,122,90,.08);border-radius:var(--rsm);padding:9px 12px;justify-content:space-between;margin-bottom:12px;border:1px solid rgba(42,122,90,.2)">
-    <span style="font-size:13px;color:var(--teal-d);font-weight:600">Cambio a devolver</span>
-    <span style="font-family:'Inter',monospace;font-size:16px;font-weight:700;color:var(--teal-d)" id="cobro-cambio-v">—</span>
-  </div>
-  <div class="modal-foot">
-    <button class="btn" onclick="closeM('m-cobro')">Cancelar</button>
-    <button class="btn t" onclick="confirmarVenta()" style="flex:2;justify-content:center;font-weight:700">✓ Confirmar venta</button>
-  </div>
-</div></div>
+</div>
 
 <!-- Recibo -->
 <div class="overlay" id="m-recibo"><div class="modal modal-sm" style="padding:0">
@@ -1439,9 +1482,10 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
     <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink4);margin-top:6px"><span>Método: <strong id="rc-metodo" style="color:var(--ink2)">—</strong></span><span id="rc-cambio-l"></span></div>
     <div id="rc-pagos" style="display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--ink5)"></div>
     <div style="text-align:center;font-size:11px;color:var(--ink4);margin-top:14px">¡Gracias por su visita! ✦</div>
-    <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="btn" style="flex:1;justify-content:center" onclick="closeM('m-recibo')">Cerrar</button>
-      <button class="btn p" style="flex:1;justify-content:center" onclick="window.print()">🖨️ Imprimir</button>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button class="btn" style="flex:1;justify-content:center;min-width:80px" onclick="closeM('m-recibo')">Cerrar</button>
+      <button class="btn" style="flex:1;justify-content:center;min-width:80px;border-color:#25D366;color:#1a8a44;background:rgba(37,211,102,.07)" onclick="enviarFacturaWA()" id="btn-rc-wa">💬 WhatsApp</button>
+      <button class="btn p" style="flex:1;justify-content:center;min-width:80px" onclick="window.print()">🖨️ Imprimir</button>
     </div>
   </div>
 </div></div>
@@ -1507,7 +1551,49 @@ let _sb = null;
 function getSB(){
   if(!_sb){
     if(window.supabase && window.supabase.createClient){
-      _sb = window.supabase.createClient(SB_URL, SB_KEY);
+      _sb = window.supabase.createClient(SB_URL, SB_KEY, {
+        auth: {
+          persistSession: false,    // No guardar sesión en localStorage
+          autoRefreshToken: false,  // No refrescar token automáticamente
+          detectSessionInUrl: false // No leer token de la URL
+        },
+        realtime: {
+          params: { eventsPerSecond: 0 }
+        },
+        global: {
+          // Fetch nativo que bypasea el proxy del iframe usando XMLHttpRequest
+          fetch: (url, options = {}) => new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            const method = options.method || 'GET';
+            xhr.open(method, url, true);
+            // Set headers
+            const headers = options.headers || {};
+            const headerObj = headers instanceof Headers ? headers
+              : (typeof headers === 'object' ? headers : {});
+            const plainHeaders = headerObj instanceof Headers
+              ? Object.fromEntries(headerObj.entries())
+              : headerObj;
+            Object.entries(plainHeaders).forEach(([k,v]) => xhr.setRequestHeader(k, v));
+            xhr.responseType = 'text';
+            xhr.onload = () => {
+              const respHeaders = new Headers();
+              xhr.getAllResponseHeaders().trim().split('\r\n').forEach(line => {
+                const idx = line.indexOf(':');
+                if(idx > 0) respHeaders.append(line.slice(0,idx).trim(), line.slice(idx+1).trim());
+              });
+              resolve(new Response(xhr.responseText, {
+                status: xhr.status,
+                statusText: xhr.statusText,
+                headers: respHeaders
+              }));
+            };
+            xhr.onerror = () => reject(new TypeError('Network request failed'));
+            xhr.ontimeout = () => reject(new TypeError('Network request timed out'));
+            const body = options.body;
+            xhr.send(body !== undefined ? body : null);
+          })
+        }
+      });
     } else {
       console.warn('Supabase SDK no cargado todavía');
       return null;
@@ -1586,10 +1672,10 @@ async function sbUpsert(table, obj){
     syncBusy();
     const {error} = await sb.from(table).upsert(row, {onConflict:'id'});
     syncDone();
-    if(error) console.warn('sbUpsert error:', table, error.message);
+    if(error) console.warn('sbUpsert error:', table, error.code, error.message, error.details);
   } catch(e) {
     syncDone();
-    console.warn('sbUpsert serialization error:', table, e.message);
+    console.warn('sbUpsert exception:', table, e.name, e.message);
   }
 }
 
@@ -1624,7 +1710,30 @@ const sDB=(k)=>{ sv(k,DB[k]); if(SB_TABLES[k]) sbUpsert; }; // overridden per-ca
 const sCfg=()=>{ sv('config',DB.config); sbSaveCfg(); };
 
 // ── Per-table save helpers (upsert last modified item) ──
-function sbSave(table, item){ sv(table, DB[table]); sbUpsert(table, item); }
+// Column whitelist per table — only send fields that exist in Supabase
+const SB_COLS = {
+  clientes:   ['id','nombre','tel','email','bday','notas','nivel','visitas','gasto','ts','social'],
+  personal:   ['id','nombre','rol','comision','tel','email','citas','ventas'],
+  usuarios:   ['id','nombre','rol','pin'],
+  servicios:  ['id','nombre','tipo','precio','comision','duracion','categoria','activo'],
+  citas:      ['id','cliente','estilista','servicio','fecha','hora','duracion','notas','estado'],
+  ventas:     ['id','folio','fecha','hora','ts','cliente','estilista','items','itemsArr','subtotal','descuento','impuesto','propina','propinaCurrency','total','metodo','pagos','promo','salon'],
+  gastos:     ['id','desc','cat','monto','fecha','proveedor','metodo','notas','ts'],
+  inventario: ['id','nombre','categoria','proveedor','stock','minimo','precio'],
+  promos:     ['id','nombre','tipo','valor','codigo','desde','hasta','activa'],
+  giftcards:  ['id','codigo','cliente','monto','saldo','vence','activa','ts'],
+};
+function filterCols(table, obj){
+  const cols = SB_COLS[table];
+  if(!cols) return obj;
+  const out = {};
+  cols.forEach(k=>{ if(obj[k]!==undefined) out[k]=obj[k]; });
+  return out;
+}
+function sbSave(table, item){
+  sv(table, DB[table]);
+  sbUpsert(table, filterCols(table, item));
+}
 function sbDel(table, id){ sv(table, DB[table]); sbDelete(table, id); }
 
 // ══════════════════════════════════════
@@ -2206,7 +2315,7 @@ function delSvc(id){
 // ══════════════════════════════════════
 // POS
 // ══════════════════════════════════════
-let cart=[],promoAct=null,pmSel='',posCat='all',payLines=[];
+let cart=[],promoAct=null,pmSel='',posCat='all',payLines=[],propinaAmt=0,propinaMoneda='local';
 
 function setPOScat(cat){
   posCat=cat;
@@ -2242,23 +2351,30 @@ function renderPOSGrid(){
 function renderPayMethods(){
   const el=document.getElementById('pay-grid');if(!el)return;
   const act=DB.config.metodospago.filter(m=>m.activo);
-  if(!act.length){el.innerHTML='<div style="font-size:11px;color:var(--ink4)">Sin métodos. Configura en ⚙️</div>';return;}
-  if(!pmSel&&act.length)pmSel=act[0].id;
-  el.innerHTML=act.map(m=>`<button class="pmb${pmSel===m.id?' sel':''}" data-m="${m.id}" title="${m.nm||m.id}" onclick="selPM(this)">${m.icon||'💳'} ${m.nm||m.id}</button>`).join('');
+  if(!act.length){
+    el.innerHTML='<div style="font-size:11px;color:var(--ink4);grid-column:1/-1">Sin métodos. Configura en ⚙️ Configuración.</div>';
+    return;
+  }
+  el.innerHTML=act.map(m=>`
+    <button class="pmb" data-m="${m.id}" title="Agregar ${m.nm||m.id}" onclick="tapPayMethod('${m.id}')">
+      <span class="pmb-ic">${m.icon||'💳'}</span>
+      <span class="pmb-nm">${m.nm||m.id}</span>
+    </button>`).join('');
   renderPayLines();
 }
 
-function selPM(btn){
-  document.querySelectorAll('.pmb').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
-  pmSel=btn.dataset.m;
-  // If there are already pay lines, clicking a method adds a new line with remaining amount
-  if(payLines.length>0){
-    const t=calcTots();
-    const paid=payLines.reduce((s,l)=>s+(parseFloat(l.amt)||0),0);
-    const rem=Math.max(0,Math.round((t.final-paid)*100)/100);
-    if(rem>0.005) addPayLine();
-  }
+// Tap a method button → immediately add a pay line with the remaining amount
+function tapPayMethod(methodId){
+  pmSel = methodId;
+  addPayLine();
+  // Flash the button
+  const btn = document.querySelector(`#pay-grid [data-m="${methodId}"]`);
+  if(btn){ btn.style.background='var(--gold-l)'; setTimeout(()=>btn.style.background='',300); }
+}
+
+function clearPayLines(){
+  payLines=[];
+  renderPayLines();
 }
 
 function addPayLine(){
@@ -2309,30 +2425,91 @@ function updatePayLineRef(lineId, val){
   if(l) l.ref=val;
 }
 
+// ── Propina ──
+function setPropina(pct){
+  const t=calcTots();
+  const base=t.final;
+  propinaMoneda='local';
+  if(pct===0){ propinaAmt=0; }
+  else { propinaAmt=Math.round(base*pct/100*100)/100; }
+  document.querySelectorAll('.propina-btn').forEach((b,i)=>{
+    b.classList.toggle('act',[0,5,10,15][i]===pct);
+  });
+  const inpEl=document.getElementById('propina-monto');
+  if(inpEl) inpEl.value=propinaAmt>0?propinaAmt.toFixed(2):'';
+  renderPropinaDisplay();
+}
+
+function setPropinaCustom(val){
+  propinaAmt=parseFloat(val)||0;
+  document.querySelectorAll('.propina-btn').forEach(b=>b.classList.remove('act'));
+  renderPropinaDisplay();
+}
+
+function setPropinaMoneda(m){
+  propinaMoneda=m;
+  const local=document.getElementById('prop-cur-local');
+  const usd=document.getElementById('prop-cur-usd');
+  const sym=DB.config.simbolo||'Bs.';
+  if(local){local.classList.toggle('act',m==='local');local.textContent=sym;}
+  if(usd){usd.classList.toggle('act',m==='USD');}
+  renderPropinaDisplay();
+}
+
+function renderPropinaDisplay(){
+  const el=document.getElementById('propina-display'); if(!el) return;
+  const sym=DB.config.simbolo||'Bs.';
+  if(!propinaAmt||propinaAmt<=0){ el.style.display='none'; return; }
+  el.style.display='block';
+  const cur=propinaMoneda==='USD'?'USD':sym;
+  el.textContent='Propina: '+propinaAmt.toFixed(2)+' '+cur;
+  // Update total display in header
+  updateCobrarHeader();
+}
+
+function updateCobrarHeader(){
+  const t=calcTots();
+  const sym=DB.config.simbolo||'Bs.';
+  let totalConPropina=t.final;
+  if(propinaAmt>0){
+    const propLocal=propinaMoneda==='USD'&&DB.config.usdRate>0
+      ? propinaAmt*DB.config.usdRate : propinaAmt;
+    totalConPropina=t.final+propLocal;
+  }
+  const totEl=document.getElementById('cobro-tot');
+  if(totEl) totEl.textContent=fmt(totalConPropina);
+  const usdEl=document.getElementById('cobro-usd');
+  if(usdEl) usdEl.textContent=hasRate()?fmtUSD(totalConPropina):'';
+}
+
 function renderPayLines(){
   const el=document.getElementById('pay-lines');if(!el)return;
-  if(!payLines.length){el.innerHTML='';renderPayLinesTotal();return;}
+  if(!payLines.length){
+    el.innerHTML='<div style="text-align:center;padding:10px;color:var(--ink4);font-size:12px;grid-column:1/-1">👆 Toca un método para agregar</div>';
+    renderPayLinesTotal();
+    return;
+  }
   const localSym = DB.config.simbolo||'Bs.';
-  el.innerHTML=payLines.map(l=>{
-    // Currency toggle buttons
+  el.innerHTML=payLines.map((l,idx)=>{
     const curs = l.currencies||['local'];
     const curToggle = curs.length>1
       ? `<div class="pay-cur-toggle">${curs.map(cu=>`<button class="pay-cur-btn${l.currency===cu?' act':''}" onclick="setPayCurrency('${l.id}','${cu}')">${cu==='local'?localSym:'USD'}</button>`).join('')}</div>`
-      : `<span style="font-size:9px;font-weight:700;color:var(--ink4);padding:0 4px">${curs[0]==='local'?localSym:'USD'}</span>`;
-    // Ref field
+      : `<span style="font-size:9px;font-weight:700;color:var(--ink4);padding:0 5px;white-space:nowrap">${curs[0]==='local'?localSym:'USD'}</span>`;
     const refField = l.hasRef
-      ? `<input class="pay-line-ref" type="text" placeholder="${l.refLabel||'Referencia'}" value="${l.ref||''}"
+      ? `<input class="pay-line-ref" type="text" placeholder="${l.refLabel||'Referencia'}" value="${escHtml(l.ref||'')}"
            oninput="updatePayLineRef('${l.id}',this.value)" maxlength="40">`
       : '';
+    const lineNum = payLines.length>1 ? `<span style="font-size:9px;background:var(--pearl);color:#fff;border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:2px">${idx+1}</span>` : '';
     return `<div class="pay-line" id="pl-${l.id}">
       <div class="pay-line-row1">
+        ${lineNum}
         <span class="pay-line-lbl" title="${l.methodNm}">${l.methodIcon} ${l.methodNm}</span>
         ${curToggle}
         <input class="pay-line-inp" type="number" value="${l.amt||''}" min="0" step="0.01"
           placeholder="0.00" inputmode="decimal"
           oninput="updatePayLineAmt('${l.id}',this.value)"
           onfocus="this.select()">
-        <button class="pay-line-rm" onclick="removePayLine('${l.id}')" title="Quitar">×</button>
+        <button class="pay-line-rm" onclick="removePayLine('${l.id}')" title="Quitar" style="font-size:16px;color:var(--red)">×</button>
       </div>
       ${refField}
     </div>`;
@@ -2340,20 +2517,32 @@ function renderPayLines(){
   renderPayLinesTotal();
 }
 
+function escHtml(s){ return String(s).replace(/"/g,'&quot;'); }
+
 function renderPayLinesTotal(){
   const t=calcTots();
+  let propinaLocal=0;
+  if(propinaAmt>0){
+    propinaLocal=propinaMoneda==='USD'&&DB.config.usdRate>0?propinaAmt*DB.config.usdRate:propinaAmt;
+  }
+  const totalConPropina=Math.round((t.final+propinaLocal)*100)/100;
   const paid=payLines.reduce((s,l)=>s+(parseFloat(l.amt)||0),0);
-  const rem=Math.round((t.final-paid)*100)/100;
+  const rem=Math.round((totalConPropina-paid)*100)/100;
   const el=document.getElementById('pay-remaining');if(!el)return;
   if(!payLines.length){el.style.display='none';return;}
   el.style.display='block';
   if(rem>0.005){
-    el.innerHTML=`<span style="color:var(--red)">Pendiente: ${fmt(rem)}</span>`;
+    el.style.background='rgba(192,57,43,.07)';
     el.style.color='var(--red)';
+    el.innerHTML=`⚠ Falta por cubrir: <strong>${fmt(rem)}</strong>`;
   } else if(rem<-0.005){
-    el.innerHTML=`<span style="color:var(--teal)">Cambio: ${fmt(Math.abs(rem))}</span>`;
+    el.style.background='rgba(42,122,90,.07)';
+    el.style.color='var(--teal-d)';
+    el.innerHTML=`💵 Cambio a devolver: <strong>${fmt(Math.abs(rem))}</strong>`;
   } else {
-    el.innerHTML=`<span style="color:var(--teal)">✓ Monto completo</span>`;
+    el.style.background='rgba(42,122,90,.07)';
+    el.style.color='var(--teal-d)';
+    el.innerHTML=`✓ Monto completo — <strong>${fmt(paid)}</strong> cubierto`;
   }
 }
 
@@ -2431,17 +2620,19 @@ function calcTots(){
 
 function updateTotals(){
   const t=calcTots();const c=DB.config;
-  document.getElementById('ct-sub').textContent=fmt(t.sub);
-  document.getElementById('ct-tax-lbl').textContent=(c.taxNm||'Impuesto')+(t.tp?` ${t.tp}%`:'');
-  document.getElementById('ct-tax').textContent=fmt(t.tax);
-  document.getElementById('ct-total').textContent=fmt(t.final);
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const sty=(id,v)=>{const e=document.getElementById(id);if(e)e.style.display=v;};
+  set('ct-sub', fmt(t.sub));
+  set('ct-tax-lbl', (c.taxNm||'Impuesto')+(t.tp?` ${t.tp}%`:''));
+  set('ct-tax', fmt(t.tax));
+  set('ct-total', fmt(t.final));
   const dr=document.getElementById('ct-disc-row');
-  if(t.disc>0){dr.style.display='flex';document.getElementById('ct-disc').textContent='-'+fmt(t.disc);}else dr.style.display='none';
+  if(dr){if(t.disc>0){dr.style.display='flex';set('ct-disc','-'+fmt(t.disc));}else dr.style.display='none';}
   const estEl=document.getElementById('pos-est');
   const estOpt=estEl&&estEl.options[estEl.selectedIndex];
   const comPct=parseFloat(estOpt&&estOpt.dataset.com)||0;
   const cb=document.getElementById('com-bar');
-  if(comPct&&cart.length){cb.style.display='flex';document.getElementById('com-amt').textContent=fmt(t.after*comPct/100);}else cb.style.display='none';
+  if(cb){if(comPct&&cart.length){cb.style.display='flex';set('com-amt',fmt(t.after*comPct/100));}else cb.style.display='none';}
   // Always show USD amount alongside local total
   const usdEl=document.getElementById('ct-total-usd');
   if(usdEl){
@@ -2455,7 +2646,7 @@ function updateTotals(){
   renderPayLinesTotal();
   const btn=document.getElementById('btn-cobrar');
   const hasEst=estEl&&estEl.value!=='';
-  btn.disabled=!cart.length||!hasEst;
+  if(btn){btn.disabled=!cart.length||!hasEst;}
   if(cart.length&&!hasEst){
     btn.textContent='Selecciona estilista';
   } else if(cart.length){
@@ -2477,6 +2668,16 @@ function removePromo(){promoAct=null;document.getElementById('promo-badge-row').
 
 function openCobrar(){
   const t=calcTots();
+  // Reset propina
+  propinaAmt=0; propinaMoneda='local';
+  const propInp=document.getElementById('propina-monto');
+  if(propInp) propInp.value='';
+  document.querySelectorAll('.propina-btn').forEach(b=>b.classList.remove('act'));
+  const propDisp=document.getElementById('propina-display');
+  if(propDisp) propDisp.style.display='none';
+  // Update currency label on propina toggle
+  const localBtn=document.getElementById('prop-cur-local');
+  if(localBtn) localBtn.textContent=DB.config.simbolo||'Bs.';
   document.getElementById('cobro-tot').textContent=fmt(t.final);
   const cobUsdEl=document.getElementById('cobro-usd');
   if(cobUsdEl){
@@ -2510,6 +2711,19 @@ function openCobrar(){
   document.getElementById('cobro-rec').value='';
   document.getElementById('cobro-cambio').style.display='none';
   openM('m-cobro');
+  setTimeout(()=>{
+    // Reset pay lines and auto-add default method
+    payLines=[];
+    renderPayMethods();
+    // Auto-add first active method with full total
+    const act=DB.config.metodospago.filter(m=>m.activo);
+    if(act.length){
+      pmSel=act[0].id;
+      addPayLine();
+    } else {
+      renderPayLines();
+    }
+  }, 30);
 }
 
 function calcCambio(){
@@ -2521,12 +2735,31 @@ function calcCambio(){
 
 function confirmarVenta(){
   const t=calcTots();
-  const rec=parseFloat(document.getElementById('cobro-rec').value)||t.final;
+  // Validate pay lines cover the total
+  if(payLines.length>0){
+    let propCheck=0;
+    if(propinaAmt>0) propCheck=propinaMoneda==='USD'&&DB.config.usdRate>0?propinaAmt*DB.config.usdRate:propinaAmt;
+    const needed=Math.round((t.final+propCheck)*100)/100;
+    const covered=Math.round(payLines.reduce((s,l)=>s+(parseFloat(l.amt)||0),0)*100)/100;
+    if(covered<needed-0.01){
+      toast(`Falta cubrir ${fmt(needed-covered)} — ajusta los montos`,'err');
+      return;
+    }
+  }
+  // Apply propina to final
+  let propLocal=0;
+  if(propinaAmt>0){
+    propLocal=propinaMoneda==='USD'&&DB.config.usdRate>0
+      ? propinaAmt*DB.config.usdRate : propinaAmt;
+  }
+  const finalConPropina=Math.round((t.final+propLocal)*100)/100;
+  const rec=parseFloat(document.getElementById('cobro-rec').value)||finalConPropina;
   const clNm=document.getElementById('pos-cl-srch').value||'Sin registrar';
   const estEl=document.getElementById('pos-est');
   const folio='GS-'+String(DB.ventas.length+1).padStart(4,'0');
   // Build payment summary
   const localSym2 = DB.config.simbolo||'Bs.';
+  const tFinal = finalConPropina;
   const metodosUsados=payLines.length>0
     ? payLines.map(l=>{
         const cur = l.currency==='USD'?'USD':localSym2;
@@ -2543,7 +2776,7 @@ function confirmarVenta(){
     estilista:estEl.options[estEl.selectedIndex]?.text||'—',
     items:cart.map(i=>i.nombre+' x'+i.qty).join(' | '),
     itemsArr:cart.map(i=>({id:i.id,nombre:i.nombre,qty:i.qty,precio:i.precio})),
-    subtotal:t.sub,descuento:t.disc,impuesto:t.tax,total:t.final,
+    subtotal:t.sub,descuento:t.disc,impuesto:t.tax,propina:propLocal>0?propLocal:0,propinaCurrency:propinaMoneda,total:finalConPropina,
     metodo:metodosUsados,
     pagos:payLines.length>0
       ? payLines.map(l=>({methodId:l.methodId,methodNm:l.methodNm,methodIcon:l.methodIcon,amt:l.amt,currency:l.currency||'local',ref:l.ref||''}))
@@ -2560,7 +2793,73 @@ function confirmarVenta(){
   showRecibo(venta,t,rec);
 }
 
+
+// ══════════════════════════════════════
+// ENVIAR FACTURA POR WHATSAPP
+// ══════════════════════════════════════
+function enviarFacturaWA(){
+  const v = _lastVenta; if(!v){ toast('Sin factura activa','err'); return; }
+  const cl = DB.clientes.find(x=>x.nombre===v.cliente)||{};
+  const tel = (cl.tel||'').replace(/[^0-9+]/g,'');
+  if(!tel){
+    toast('El cliente no tiene teléfono — agrégalo en Clientes','err');
+    return;
+  }
+  const sym   = DB.config.simbolo||'$';
+  const salon = v.salon || DB.config.salon || 'el salón';
+  const NL    = '\n';
+  const SEP   = '━━━━━━━━━━━━━━━━━';
+
+  // Items
+  const lineas = (v.itemsArr||[]).map(i=>'  • '+i.nombre+' x'+i.qty+'  '+fmt(i.precio*i.qty)).join(NL);
+
+  // Extras
+  let extras = '';
+  if(v.descuento>0) extras += NL+'  🏷️ Descuento: -'+fmt(v.descuento);
+  if(v.impuesto>0)  extras += NL+'  🧾 '+(DB.config.taxNm||'Impuesto')+': '+fmt(v.impuesto);
+  if(v.propina>0)   extras += NL+'  🙏 Propina: +'+fmt(v.propina);
+
+  // Payment
+  let pagosStr = '';
+  if(v.pagos && v.pagos.length>1){
+    pagosStr = NL+'💳 *Forma de pago:*'+NL+v.pagos.map(p=>{
+      const cur = p.currency==='USD'?'USD':sym;
+      const ref = p.ref?' ['+p.ref+']':'';
+      return '  • '+p.methodNm+' ('+cur+'): '+fmt(p.amt||0)+ref;
+    }).join(NL);
+  } else {
+    pagosStr = NL+'💳 *Pago:* '+v.metodo;
+  }
+
+  const totalStr = '💰 *TOTAL: '+fmt(v.total)+'*'+(hasRate()?' ('+fmtUSD(v.total)+')':'');
+
+  const msg = [
+    '🌟 *'+salon+'*',
+    SEP,
+    '📋 *Factura '+v.folio+'*',
+    '📅 '+v.fecha+'  '+v.hora,
+    '👤 Cliente: '+v.cliente,
+    '✂️ Estilista: '+v.estilista,
+    SEP,
+    '*Servicios:*',
+    lineas+extras,
+    SEP,
+    totalStr,
+    pagosStr,
+    SEP,
+    '¡Gracias por visitarnos! ✨',
+    'Te esperamos pronto 💇'
+  ].join(NL);
+
+  window.open('https://wa.me/'+tel+'?text='+encodeURIComponent(msg),'_blank');
+  toast('✓ Abriendo WhatsApp...','ok');
+  addNotifHist('wa', v.cliente, v.fecha, v.hora);
+}
+
+
+let _lastVenta = null; // for WhatsApp sending
 function showRecibo(v,t,rec){
+  _lastVenta = v;
   document.getElementById('rc-salon').textContent=v.salon||'GlamSuite';
   document.getElementById('rc-folio').textContent='Folio: '+v.folio;
   document.getElementById('rc-fecha').textContent=v.fecha+' '+v.hora;
@@ -2585,11 +2884,12 @@ function showRecibo(v,t,rec){
   let ex='';
   if(v.descuento>0)ex+=`<div class="rc-row" style="color:var(--teal)"><span>Descuento</span><span style="font-family:'Inter',monospace">-${fmt(v.descuento)}</span></div>`;
   if(v.impuesto>0)ex+=`<div class="rc-row" style="color:var(--ink4)"><span>${DB.config.taxNm||'Impuesto'}</span><span style="font-family:'Inter',monospace">${fmt(v.impuesto)}</span></div>`;
+  if(v.propina>0)ex+=`<div class="rc-row" style="color:var(--gold-d)"><span>Propina${v.propinaCurrency==='USD'?' (USD)':''}</span><span style="font-family:'Inter',monospace">+${fmt(v.propina)}</span></div>`;
   document.getElementById('rc-extras').innerHTML=ex;
   const cambio=rec-v.total;
   document.getElementById('rc-cambio-l').textContent=cambio>0?'Cambio: '+fmt(cambio):'';
   openM('m-recibo');
-  cart=[];promoAct=null;payLines=[];
+  cart=[];promoAct=null;payLines=[];propinaAmt=0;propinaMoneda='local';
   document.getElementById('promo-badge-row').style.display='none';
   document.getElementById('promo-inp').value='';
   document.getElementById('pos-cl-srch').value='';
@@ -3696,13 +3996,9 @@ function renderPOSBanner(){
   if(r>0){
     banner.style.display='flex';
     if(lbl) lbl.textContent='1 USD = '+sym()+' '+Number(r).toFixed(2);
-    if(fch) fch.textContent=DB.config.usdFecha?'actualizado '+DB.config.usdFecha:'';
+    if(fch) fch.textContent=DB.config.usdFecha?DB.config.usdFecha:'';
   } else {
-    banner.style.display='flex';
-    banner.style.background='rgba(192,57,43,.07)';
-    banner.style.borderColor='rgba(192,57,43,.2)';
-    if(lbl) lbl.innerHTML='<span style="color:var(--red)">⚠ Sin tasa USD configurada — precios se muestran en USD</span>';
-    if(fch) fch.textContent='';
+    banner.style.display='none';
   }
 }
 
