@@ -303,12 +303,21 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 .trow.disc{color:#4CAF87}
 .pay-sect{padding:8px 13px;border-top:1px solid var(--ink5);flex-shrink:0}
 .pay-lbl{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink4);margin-bottom:6px}
-.pay-grid{display:flex;flex-wrap:wrap;gap:5px}
-.pmb{height:30px;padding:0 9px;border:1.5px solid var(--divider);border-radius:var(--rsm);background:var(--bg);font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--ink3);cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:all .15s;-webkit-user-select:none}
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.pmb{height:28px;padding:0 6px;border:1.5px solid var(--divider);border-radius:var(--rsm);background:var(--bg);font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:.03em;color:var(--ink3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap;transition:all .15s;-webkit-user-select:none;overflow:hidden;text-overflow:ellipsis;min-width:0}
 /* MULTI-PAY LINE */
-.pay-line{display:flex;align-items:center;gap:6px;padding:5px 8px;background:var(--bg);border-radius:var(--rsm);border:1px solid var(--divider)}
-.pay-line-lbl{font-size:11px;font-weight:600;color:var(--pearl);display:flex;align-items:center;gap:4px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pay-line-inp{width:90px;height:26px;border:1.5px solid var(--ink5);border-radius:5px;padding:0 7px;font-family:'Inter',monospace;font-size:12px;font-weight:600;color:var(--pearl);background:var(--card);outline:none;text-align:right;flex-shrink:0}
+.pay-lines-grid{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.pay-line{display:flex;flex-direction:column;gap:4px;padding:7px 9px;background:var(--bg);border-radius:var(--r);border:1px solid var(--divider)}
+.pay-line-row1{display:flex;align-items:center;gap:5px}
+.pay-line-lbl{font-size:11px;font-weight:600;color:var(--pearl);display:flex;align-items:center;gap:3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pay-line-inp{width:80px;height:26px;border:1.5px solid var(--ink5);border-radius:5px;padding:0 6px;font-family:'Inter',monospace;font-size:12px;font-weight:600;color:var(--pearl);background:var(--card);outline:none;text-align:right;flex-shrink:0}
+.pay-line-inp:focus{border-color:var(--gold)}
+.pay-cur-toggle{display:flex;border:1.5px solid var(--ink5);border-radius:5px;overflow:hidden;flex-shrink:0;height:26px}
+.pay-cur-btn{padding:0 6px;font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;background:var(--bg);border:none;cursor:pointer;color:var(--ink4);transition:all .12s;white-space:nowrap}
+.pay-cur-btn.act{background:var(--pearl);color:#fff}
+.pay-line-ref{width:100%;height:24px;border:1.5px solid var(--ink5);border-radius:5px;padding:0 8px;font-size:11px;color:var(--pearl);background:var(--card);outline:none;transition:border-color .15s}
+.pay-line-ref:focus{border-color:var(--gold)}
+.pay-line-ref::placeholder{color:#BDBDBD}
 .pay-line-inp:focus{border-color:var(--gold)}
 .pay-line-rm{width:20px;height:20px;border-radius:50%;border:none;background:transparent;color:var(--ink4);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
 .pay-line-rm:hover{background:var(--red-l);color:var(--red)}
@@ -663,7 +672,7 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
           <button class="btn sm" style="height:24px;padding:0 8px;font-size:9px;border-radius:20px" onclick="addPayLine()">+ Agregar</button>
         </div>
         <div class="pay-grid" id="pay-grid"></div>
-        <div id="pay-lines" style="display:flex;flex-direction:column;gap:5px;margin-top:7px"></div>
+        <div id="pay-lines" class="pay-lines-grid"></div>
         <div id="pay-remaining" style="display:none;font-size:11px;font-weight:600;color:var(--gold-d);margin-top:5px;text-align:right"></div>
       </div>
       <div class="com-bar" id="com-bar" style="display:none">
@@ -1562,15 +1571,26 @@ async function sbLoadAll(){
   } catch(e){ console.warn('sbLoadAll error:', e); }
 }
 
+// ── Sanitize: convert to plain JSON-safe object ──
+function toPlain(obj){
+  return JSON.parse(JSON.stringify(obj));
+}
+
 // ── Upsert one record ──
 async function sbUpsert(table, obj){
   const sb = getSB(); if(!sb) return;
-  const row = {...obj, updated_at: new Date().toISOString()};
-  if(!row.created_at) row.created_at = row.updated_at;
-  syncBusy();
-  const {error} = await sb.from(table).upsert(row, {onConflict:'id'});
-  syncDone();
-  if(error) console.warn('sbUpsert error:', table, error.message);
+  try {
+    const now = new Date().toISOString();
+    const row = {...toPlain(obj), updated_at: now};
+    if(!row.created_at) row.created_at = now;
+    syncBusy();
+    const {error} = await sb.from(table).upsert(row, {onConflict:'id'});
+    syncDone();
+    if(error) console.warn('sbUpsert error:', table, error.message);
+  } catch(e) {
+    syncDone();
+    console.warn('sbUpsert serialization error:', table, e.message);
+  }
 }
 
 // ── Delete one record ──
@@ -1585,13 +1605,18 @@ async function sbDelete(table, id){
 // ── Save config (single row) ──
 async function sbSaveCfg(){
   const sb = getSB(); if(!sb) return;
-  syncBusy();
-  const {error} = await sb.from('config').upsert(
-    {id:'main', data: DB.config, updated_at: new Date().toISOString()},
-    {onConflict:'id'}
-  );
-  syncDone();
-  if(error) console.warn('sbSaveCfg error:', error.message);
+  try {
+    syncBusy();
+    const {error} = await sb.from('config').upsert(
+      {id:'main', data: toPlain(DB.config), updated_at: new Date().toISOString()},
+      {onConflict:'id'}
+    );
+    syncDone();
+    if(error) console.warn('sbSaveCfg error:', error.message);
+  } catch(e){
+    syncDone();
+    console.warn('sbSaveCfg serialization error:', e.message);
+  }
 }
 
 // ── sDB / sCfg: write local cache + push to Supabase ──
@@ -2244,7 +2269,20 @@ function addPayLine(){
   const remaining=Math.max(0,Math.round((t.final-alreadyPaid)*100)/100);
   const mId=pmSel||act[0].id;
   const m=DB.config.metodospago.find(x=>x.id===mId)||act[0];
-  payLines.push({id:Date.now().toString(),methodId:m.id,methodNm:m.nm,methodIcon:m.icon||'💳',amt:remaining>0?remaining:0});
+  const pmDef = ALL_PM[m.id]||{};
+  const currencies = pmDef.currencies||['local'];
+  payLines.push({
+    id: Date.now().toString(),
+    methodId: m.id,
+    methodNm: m.nm,
+    methodIcon: m.icon||'💳',
+    amt: remaining>0 ? remaining : 0,
+    currency: currencies[0],           // default first option
+    currencies: currencies,
+    hasRef: pmDef.hasRef||false,
+    refLabel: pmDef.refLabel||'Referencia',
+    ref: ''
+  });
   renderPayLines();
 }
 
@@ -2259,18 +2297,46 @@ function updatePayLineAmt(lineId,val){
   renderPayLinesTotal();
 }
 
+function setPayCurrency(lineId, currency){
+  const l=payLines.find(x=>x.id===lineId);
+  if(!l)return;
+  l.currency=currency;
+  renderPayLines();
+}
+
+function updatePayLineRef(lineId, val){
+  const l=payLines.find(x=>x.id===lineId);
+  if(l) l.ref=val;
+}
+
 function renderPayLines(){
   const el=document.getElementById('pay-lines');if(!el)return;
   if(!payLines.length){el.innerHTML='';renderPayLinesTotal();return;}
-  el.innerHTML=payLines.map(l=>`
-    <div class="pay-line" id="pl-${l.id}">
-      <span class="pay-line-lbl">${l.methodIcon} ${l.methodNm}</span>
-      <input class="pay-line-inp" type="number" value="${l.amt||''}" min="0" step="0.01"
-        placeholder="0.00" inputmode="decimal"
-        oninput="updatePayLineAmt('${l.id}',this.value)"
-        onfocus="this.select()">
-      <button class="pay-line-rm" onclick="removePayLine('${l.id}')" title="Quitar">×</button>
-    </div>`).join('');
+  const localSym = DB.config.simbolo||'Bs.';
+  el.innerHTML=payLines.map(l=>{
+    // Currency toggle buttons
+    const curs = l.currencies||['local'];
+    const curToggle = curs.length>1
+      ? `<div class="pay-cur-toggle">${curs.map(cu=>`<button class="pay-cur-btn${l.currency===cu?' act':''}" onclick="setPayCurrency('${l.id}','${cu}')">${cu==='local'?localSym:'USD'}</button>`).join('')}</div>`
+      : `<span style="font-size:9px;font-weight:700;color:var(--ink4);padding:0 4px">${curs[0]==='local'?localSym:'USD'}</span>`;
+    // Ref field
+    const refField = l.hasRef
+      ? `<input class="pay-line-ref" type="text" placeholder="${l.refLabel||'Referencia'}" value="${l.ref||''}"
+           oninput="updatePayLineRef('${l.id}',this.value)" maxlength="40">`
+      : '';
+    return `<div class="pay-line" id="pl-${l.id}">
+      <div class="pay-line-row1">
+        <span class="pay-line-lbl" title="${l.methodNm}">${l.methodIcon} ${l.methodNm}</span>
+        ${curToggle}
+        <input class="pay-line-inp" type="number" value="${l.amt||''}" min="0" step="0.01"
+          placeholder="0.00" inputmode="decimal"
+          oninput="updatePayLineAmt('${l.id}',this.value)"
+          onfocus="this.select()">
+        <button class="pay-line-rm" onclick="removePayLine('${l.id}')" title="Quitar">×</button>
+      </div>
+      ${refField}
+    </div>`;
+  }).join('');
   renderPayLinesTotal();
 }
 
@@ -2460,8 +2526,13 @@ function confirmarVenta(){
   const estEl=document.getElementById('pos-est');
   const folio='GS-'+String(DB.ventas.length+1).padStart(4,'0');
   // Build payment summary
+  const localSym2 = DB.config.simbolo||'Bs.';
   const metodosUsados=payLines.length>0
-    ? payLines.map(l=>l.methodNm+(l.amt?': '+fmt(l.amt):'')).join(' + ')
+    ? payLines.map(l=>{
+        const cur = l.currency==='USD'?'USD':localSym2;
+        const ref = l.ref ? ' ['+l.ref+']' : '';
+        return l.methodNm+' ('+cur+'): '+fmt(l.amt)+ref;
+      }).join(' + ')
     : (DB.config.metodospago.find(m=>m.id===pmSel)?.nm||pmSel);
   const venta={
     id:String(Date.now()),folio,
@@ -2474,7 +2545,9 @@ function confirmarVenta(){
     itemsArr:cart.map(i=>({id:i.id,nombre:i.nombre,qty:i.qty,precio:i.precio})),
     subtotal:t.sub,descuento:t.disc,impuesto:t.tax,total:t.final,
     metodo:metodosUsados,
-    pagos:payLines.length>0?[...payLines]:[{methodId:pmSel,methodNm:DB.config.metodospago.find(m=>m.id===pmSel)?.nm||pmSel,amt:t.final}],
+    pagos:payLines.length>0
+      ? payLines.map(l=>({methodId:l.methodId,methodNm:l.methodNm,methodIcon:l.methodIcon,amt:l.amt,currency:l.currency||'local',ref:l.ref||''}))
+      : [{methodId:pmSel,methodNm:DB.config.metodospago.find(m=>m.id===pmSel)?.nm||pmSel,amt:t.final,currency:'local',ref:''}],
     promo:promoAct?promoAct.nombre:'',salon:DB.config.salon
   };
   DB.ventas.push(venta);sbSave('ventas', venta);
@@ -2500,8 +2573,13 @@ function showRecibo(v,t,rec){
   const rcPagosEl=document.getElementById('rc-pagos');
   if(rcPagosEl&&v.pagos&&v.pagos.length>1){
     rcPagosEl.style.display='block';
+    const localSym3=DB.config.simbolo||'Bs.';
     rcPagosEl.innerHTML='<div style="font-size:11px;color:var(--ink4);margin-bottom:4px;font-weight:600">Desglose de pagos:</div>'+
-      v.pagos.map(p=>`<div class="rc-row"><span>${p.methodNm}</span><span style="font-family:'Inter',monospace">${fmt(p.amt||0)}</span></div>`).join('');
+      v.pagos.map(p=>{
+        const cur=p.currency==='USD'?'USD':localSym3;
+        const ref=p.ref?` <span style="font-size:10px;color:var(--ink4)">[${p.ref}]</span>`:'';
+        return `<div class="rc-row"><span>${p.methodNm} <span style="font-size:9px;color:var(--gold-m)">(${cur})</span>${ref}</span><span style="font-family:'Inter',monospace">${fmt(p.amt||0)}</span></div>`;
+      }).join('');
   } else if(rcPagosEl) rcPagosEl.style.display='none';
   document.getElementById('rc-lines').innerHTML=(v.itemsArr||[]).map(i=>`<div class="rc-row"><span>${i.nombre} x${i.qty}</span><span style="font-family:'Inter',monospace">${fmt(i.precio*i.qty)}</span></div>`).join('');
   let ex='';
@@ -2551,7 +2629,7 @@ function saveUser(){
   const user={id:editId||String(Date.now()),nombre:nm,rol,pin};
   if(editId){const i=DB.usuarios.findIndex(u=>u.id===editId);if(i>=0)DB.usuarios[i]=user;else DB.usuarios.push(user);}
   else DB.usuarios.push(user);
-  sDB('usuarios');closeM('m-nuevo-user');renderUsers();renderLoginUsers();
+  sbSave('usuarios', user);closeM('m-nuevo-user');renderUsers();renderLoginUsers();
   toast(editId?'✓ Usuario actualizado':'✓ Usuario creado','ok');
 }
 
@@ -2961,7 +3039,7 @@ const PAISES=[
   {id:'do',flag:'🇩🇴',name:'Rep. Dominicana',moneda:'Peso Dom.',simbolo:'RD$',tax:{nm:'ITBIS',pct:18},metodos:['efectivo','tarjeta_credito','tarjeta_debito','transferencia','pago_movil']},
   {id:'mx',flag:'🇲🇽',name:'México',moneda:'Peso MXN',simbolo:'MX$',tax:{nm:'IVA',pct:16},metodos:['efectivo','tarjeta_credito','tarjeta_debito','transferencia','oxxo_pay']},
   {id:'co',flag:'🇨🇴',name:'Colombia',moneda:'Peso COP',simbolo:'COP$',tax:{nm:'IVA',pct:19},metodos:['efectivo','tarjeta_credito','tarjeta_debito','nequi','daviplata','transferencia']},
-  {id:'ve',flag:'🇻🇪',name:'Venezuela',moneda:'Bolívar',simbolo:'Bs.',tax:{nm:'IVA',pct:16},metodos:['efectivo','efectivo_usd','zelle','pago_movil','tarjeta_debito','transferencia']},
+  {id:'ve',flag:'🇻🇪',name:'Venezuela',moneda:'Bolívar',simbolo:'Bs.',tax:{nm:'IVA',pct:16},metodos:['efectivo','efectivo_usd','zelle','pago_movil','tarjeta_debito','tarjeta_credito','transferencia']},
   {id:'us',flag:'🇺🇸',name:'EE.UU.',moneda:'Dólar',simbolo:'$',tax:{nm:'Sales Tax',pct:8},metodos:['efectivo','tarjeta_credito','tarjeta_debito','zelle','paypal','venmo','cash_app']},
   {id:'es',flag:'🇪🇸',name:'España',moneda:'Euro',simbolo:'€',tax:{nm:'IVA',pct:21},metodos:['efectivo','tarjeta_credito','tarjeta_debito','bizum','transferencia','paypal']},
   {id:'ar',flag:'🇦🇷',name:'Argentina',moneda:'Peso AR$',simbolo:'AR$',tax:{nm:'IVA',pct:21},metodos:['efectivo','tarjeta_credito','tarjeta_debito','transferencia','mercado_pago']},
@@ -2973,13 +3051,13 @@ const PAISES=[
 ];
 
 const ALL_PM={
-  efectivo:{nm:'Efectivo',icon:'💵',desc:'Pago en efectivo local'},
-  efectivo_usd:{nm:'Efectivo USD',icon:'💵',desc:'Dólares en efectivo'},
-  tarjeta_credito:{nm:'Tarjeta crédito',icon:'💳',desc:'Visa, Mastercard, Amex'},
-  tarjeta_debito:{nm:'Tarjeta débito',icon:'🏦',desc:'Débito bancario'},
-  transferencia:{nm:'Transferencia',icon:'📲',desc:'Transferencia bancaria'},
-  pago_movil:{nm:'Pago móvil',icon:'📱',desc:'App bancaria'},
-  zelle:{nm:'Zelle',icon:'💙',desc:'Transferencia USA'},
+  efectivo:       {nm:'Efectivo',       icon:'💵', desc:'Pago en efectivo local',   currencies:['local'],         hasRef:false},
+  efectivo_usd:   {nm:'Efectivo USD',   icon:'💴', desc:'Dólares en efectivo',       currencies:['USD'],           hasRef:false},
+  tarjeta_credito:{nm:'Tarjeta crédito',icon:'💳', desc:'Visa, Mastercard, Amex',    currencies:['local','USD'],   hasRef:true,  refLabel:'Últimos 4 dígitos'},
+  tarjeta_debito: {nm:'Tarjeta débito', icon:'🏦', desc:'Débito bancario',            currencies:['local','USD'],   hasRef:true,  refLabel:'Últimos 4 dígitos'},
+  transferencia:  {nm:'Transferencia',  icon:'📲', desc:'Transferencia bancaria',     currencies:['local','USD'],   hasRef:true,  refLabel:'N° de referencia'},
+  pago_movil:     {nm:'Pago móvil',     icon:'📱', desc:'App bancaria',               currencies:['local','USD'],   hasRef:true,  refLabel:'N° de referencia'},
+  zelle:          {nm:'Zelle',          icon:'💙', desc:'Transferencia USA',           currencies:['USD'],           hasRef:true,  refLabel:'Confirmación Zelle'},
   paypal:{nm:'PayPal',icon:'🅿️',desc:'Pagos online'},
   venmo:{nm:'Venmo',icon:'💜',desc:'Pagos P2P USA'},
   cash_app:{nm:'Cash App',icon:'💚',desc:'Pagos móviles USA'},
