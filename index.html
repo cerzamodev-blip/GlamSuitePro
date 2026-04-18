@@ -6,6 +6,7 @@
 <title>GlamSuite</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
 <style>
 /* ══ TOKENS ══ */
 :root{
@@ -572,7 +573,7 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
       <div class="step-box" onclick="go('servicios')"><div class="step-n">2️⃣</div><div class="step-t">Agrega servicios</div><div class="step-d">Crea tu catálogo completo</div></div>
       <div class="step-box" onclick="go('usuarios')"><div class="step-n">3️⃣</div><div class="step-t">Crea usuarios</div><div class="step-d">Cajeras, estilistas y propietaria</div></div>
       <div class="step-box" onclick="go('clientes')"><div class="step-n">4️⃣</div><div class="step-t">Registra clientes</div><div class="step-d">Base de datos de tu salón</div></div>
-      <div class="step-box" onclick="go('google')"><div class="step-n">5️⃣</div><div class="step-t">Conecta Google</div><div class="step-d">Sheets, Calendar y Gmail</div></div>
+      <div class="step-box" onclick="go('google')"><div class="step-n">5️⃣</div><div class="step-t">Conecta integraciones</div><div class="step-d">Calendar, Gmail y WhatsApp</div></div>
       <div class="step-box" onclick="go('pos')"><div class="step-n">6️⃣</div><div class="step-t">¡Empieza a vender!</div><div class="step-d">Usa el POS para cobrar</div></div>
     </div>
   </div>
@@ -705,7 +706,7 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
     <div class="ph-acts">
       <div class="srch" style="width:170px"><input type="text" id="cl-srch" placeholder="Buscar..." oninput="renderCls()"></div>
       <button class="btn" onclick="exportXLSX('clientes')">📥 Excel</button>
-      <button class="btn p" onclick="openM('m-nuevo-cl')">+ Nuevo</button>
+      <button class="btn p" onclick="openNuevoCliente()">+ Nuevo</button>
     </div>
   </div>
   <div class="g4" style="margin-bottom:12px">
@@ -804,7 +805,6 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
         <button class="rp-period-btn" data-p="custom" onclick="setRpPeriod(this)">Rango</button>
       </div>
       <button class="btn" onclick="exportXLSX('reportes')">📥 Excel</button>
-      <button class="btn" onclick="exportToSheets()">📊 Sheets</button>
     </div>
   </div>
   <!-- Custom date range -->
@@ -892,32 +892,32 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
 
 <!-- ══ GOOGLE ══ -->
 <div class="panel" id="p-google">
-  <div class="ph"><div class="ph-left"><div class="ph-title">Google Suite</div></div></div>
+  <div class="ph"><div class="ph-left"><div class="ph-title">Integraciones</div><div class="ph-sub">Calendar, Gmail y WhatsApp</div></div></div>
   <div class="g2" style="margin-bottom:12px">
     <div class="card">
-      <div class="card-title">🔗 Servicios</div>
-      <div class="int-item"><div class="int-ic" style="background:#E8F5E9">📊</div><div class="int-info"><div class="int-nm">Google Sheets</div><div class="int-desc">Ventas sincronizadas automáticamente</div></div><div class="int-st"><div class="idot" id="gs-dot"></div><span id="gs-st">Desconectado</span></div></div>
-      <div class="int-item"><div class="int-ic" style="background:#E8EAF6">📅</div><div class="int-info"><div class="int-nm">Google Calendar</div><div class="int-desc">Citas sincronizadas</div></div><div class="int-st"><div class="idot" id="gc-dot"></div><span id="gc-st">Desconectado</span></div></div>
+      <div class="card-title">🔗 Estado de integraciones</div>
+      <div class="int-item"><div class="int-ic" style="background:#E8EAF6">📅</div><div class="int-info"><div class="int-nm">Google Calendar</div><div class="int-desc">Sincroniza citas con tu calendario</div></div><div class="int-st"><div class="idot" id="gc-dot"></div><span id="gc-st">Sin configurar</span></div></div>
       <div class="int-item"><div class="int-ic" style="background:#FFF3E0">✉️</div><div class="int-info"><div class="int-nm">Gmail</div><div class="int-desc">Recordatorios por email a clientes</div></div><div class="int-st"><div class="idot" id="gm-dot"></div><span id="gm-st">Sin configurar</span></div></div>
-      <div class="int-item"><div class="int-ic" style="background:#DFF5E1">💬</div><div class="int-info"><div class="int-nm">WhatsApp</div><div class="int-desc">Recordatorios directos vía wa.me</div></div><div class="int-st"><div class="idot on"></div><span style="color:var(--teal-d)">Listo</span></div></div>
+      <div class="int-item" style="border-bottom:none"><div class="int-ic" style="background:#DFF5E1">💬</div><div class="int-info"><div class="int-nm">WhatsApp</div><div class="int-desc">Recordatorios directos vía wa.me — sin API</div></div><div class="int-st"><div class="idot on"></div><span style="color:var(--teal-d);font-weight:600">Listo</span></div></div>
     </div>
     <div>
       <div class="card" style="margin-bottom:12px">
-        <div class="card-title">⚙️ Apps Script URL</div>
+        <div class="card-title">📅 Google Calendar — Apps Script</div>
+        <div class="al al-i" style="margin-bottom:10px;font-size:11px">Conecta un Google Apps Script para sincronizar citas automáticamente con tu Google Calendar.</div>
         <div class="fg" style="margin-bottom:10px">
-          <div class="flbl">URL Web App</div>
-          <input type="text" class="fi" id="gs-url" placeholder="https://script.google.com/macros/s/...">
-          <div style="font-size:11px;color:var(--ink4);margin-top:3px">Deploy como Web App, acceso público</div>
+          <div class="flbl">URL Apps Script (Calendar)</div>
+          <input type="text" class="fi" id="gc-script-url" placeholder="https://script.google.com/macros/s/...">
+          <div style="font-size:11px;color:var(--ink4);margin-top:3px">Despliega el script como Web App con acceso público</div>
         </div>
-        <button class="btn t" style="width:100%;justify-content:center" onclick="saveGSConf()">Guardar y conectar</button>
+        <button class="btn p" style="width:100%;justify-content:center" onclick="saveCalendarConf()">💾 Guardar y conectar</button>
       </div>
       <div class="card">
-        <div class="card-title">📤 Exportar</div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <button class="btn" style="justify-content:space-between" onclick="exportToSheets()">Ventas → Sheets <span>→</span></button>
-          <button class="btn" style="justify-content:space-between" onclick="syncCalendar()">Agenda → Calendar <span>→</span></button>
+        <div class="card-title">⚙️ Acciones rápidas</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <button class="btn" style="justify-content:space-between" onclick="syncCalendar()">📅 Sincronizar agenda → Calendar <span>→</span></button>
+          <button class="btn" style="justify-content:space-between" onclick="go('config');setCfgTab('notif',document.querySelector('[onclick*=notif]'))">✉️ Configurar plantillas Gmail / WA <span>→</span></button>
           <div class="sdiv"></div>
-          <button class="btn t" style="justify-content:space-between" onclick="exportXLSX('all')">📥 Todo → Excel <span>→</span></button>
+          <button class="btn t" style="justify-content:space-between" onclick="exportXLSX('all')">📥 Exportar todo → Excel <span>→</span></button>
         </div>
       </div>
     </div>
@@ -1117,7 +1117,7 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
       <div class="fg" style="margin-bottom:10px">
         <div class="flbl">Apps Script URL (opcional — para envío directo)</div>
         <input type="text" class="fi" id="cfg-gm-script" placeholder="https://script.google.com/macros/s/...">
-        <div style="font-size:11px;color:var(--ink4);margin-top:3px">Si no tienes Apps Script, se usará mailto: (abre tu cliente de email)</div>
+        <div style="font-size:11px;color:var(--ink4);margin-top:3px">Pega aquí la URL de tu Apps Script desplegado como Web App (acceso: Cualquier usuario)</div>
       </div>
       <button class="btn p" onclick="saveCfgGmail()">Guardar configuración Gmail</button>
     </div>
@@ -1223,13 +1223,37 @@ td{padding:10px 12px;font-size:13px;color:var(--ink2)}
   <div class="modal-foot"><button class="btn" onclick="closeM('m-svc')">Cancelar</button><button class="btn p" onclick="saveServicio()">Guardar</button></div>
 </div></div>
 
-<!-- Nuevo Cliente -->
+<!-- Nuevo / Editar Cliente -->
 <div class="overlay" id="m-nuevo-cl"><div class="modal">
-  <div class="modal-title">Nuevo cliente</div>
-  <div class="frow"><div class="fg"><div class="flbl">Nombre *</div><input type="text" class="fi" id="cl-nm" placeholder="Nombre completo"></div><div class="fg"><div class="flbl">Teléfono</div><input type="tel" class="fi" id="cl-tel" placeholder="+1 809..."></div></div>
-  <div class="frow"><div class="fg"><div class="flbl">Email</div><input type="email" class="fi" id="cl-email" placeholder="correo@email.com"></div><div class="fg"><div class="flbl">Cumpleaños</div><input type="date" class="fi" id="cl-bday"></div></div>
-  <div class="fg"><div class="flbl">Notas</div><textarea class="fta" id="cl-notas" placeholder="Preferencias, alergias..."></textarea></div>
-  <div class="modal-foot"><button class="btn" onclick="closeM('m-nuevo-cl')">Cancelar</button><button class="btn p" onclick="saveCliente()">Guardar</button></div>
+  <div class="modal-title" id="m-cl-title">Nuevo cliente</div>
+  <input type="hidden" id="cl-edit-id">
+  <div class="frow">
+    <div class="fg"><div class="flbl">Nombre *</div><input type="text" class="fi" id="cl-nm" placeholder="Nombre completo"></div>
+    <div class="fg"><div class="flbl">Teléfono</div><input type="tel" class="fi" id="cl-tel" placeholder="+1 809..."></div>
+  </div>
+  <div class="frow">
+    <div class="fg"><div class="flbl">Email</div><input type="email" class="fi" id="cl-email" placeholder="correo@email.com"></div>
+    <div class="fg"><div class="flbl">Cumpleaños</div><input type="date" class="fi" id="cl-bday"></div>
+  </div>
+  <div class="frow">
+    <div class="fg">
+      <div class="flbl">Nivel de fidelidad</div>
+      <select class="fsl" id="cl-nivel">
+        <option value="Nuevo">Nuevo</option>
+        <option value="Bronze">Bronze</option>
+        <option value="Silver">Silver</option>
+        <option value="Gold">Gold</option>
+        <option value="VIP">VIP ⭐</option>
+      </select>
+    </div>
+    <div class="fg"><div class="flbl">Instagram / Red social</div><input type="text" class="fi" id="cl-social" placeholder="@usuario"></div>
+  </div>
+  <div class="fg"><div class="flbl">Notas / Preferencias</div><textarea class="fta" id="cl-notas" placeholder="Alergias, preferencias de color, notas especiales..."></textarea></div>
+  <div class="modal-foot">
+    <button class="btn" onclick="closeM('m-nuevo-cl')">Cancelar</button>
+    <button class="btn danger" id="cl-del-btn" style="display:none" onclick="delClFromModal()">🗑️ Eliminar</button>
+    <button class="btn p" onclick="saveCliente()">Guardar</button>
+  </div>
 </div></div>
 
 <!-- Nuevo Empleado -->
@@ -1472,7 +1496,14 @@ const SB_URL = 'https://gbcpwmljirwpzwedgyjk.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiY3B3bWxqaXJ3cHp3ZWRneWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjI1MjQsImV4cCI6MjA5MjAzODUyNH0.AHhsLv3-CAJDNf84gJ0LzIef0b9jesl5NUclI6DoXOg';
 let _sb = null;
 function getSB(){
-  if(!_sb && window.supabase) _sb = window.supabase.createClient(SB_URL, SB_KEY);
+  if(!_sb){
+    if(window.supabase && window.supabase.createClient){
+      _sb = window.supabase.createClient(SB_URL, SB_KEY);
+    } else {
+      console.warn('Supabase SDK no cargado todavía');
+      return null;
+    }
+  }
   return _sb;
 }
 
@@ -1598,7 +1629,7 @@ const MENU_ITEMS=[
   {id:'giftcards',ic:'🎁',lb:'Gift Cards',sec:''},
   {id:'reportes',ic:'📊',lb:'Reportes',sec:'Análisis'},
   {id:'gastos',ic:'💸',lb:'Gastos',sec:''},
-  {id:'google',ic:'🔗',lb:'Google Suite',sec:'Sistema'},
+  {id:'google',ic:'🔗',lb:'Integraciones',sec:'Sistema'},
   {id:'config',ic:'⚙️',lb:'Configuración',sec:''},
 ];
 
@@ -1887,7 +1918,6 @@ function renderDashboard(){
   // Status
   const msgs=[];
   if(!c.pais)msgs.push({t:'al-w',m:'⚙️ País no configurado'});
-  if(!c.gsUrl)msgs.push({t:'al-i',m:'🔗 Google Sheets no conectado'});
   if(!DB.servicios.length)msgs.push({t:'al-w',m:'✂️ Sin servicios en catálogo'});
   if(!DB.usuarios.length)msgs.push({t:'al-w',m:'🔐 Sin usuarios del sistema'});
   const invBaj=DB.inventario.filter(i=>i.stock<i.minimo);
@@ -2454,7 +2484,6 @@ function confirmarVenta(){
     if(gc){gc.saldo=Math.max(0,gc.saldo-t.disc);if(gc.saldo===0)gc.activa=false;sbSave('giftcards',gc);}
   }
   closeM('m-cobro');
-  sendToSheets(venta);
   showRecibo(venta,t,rec);
 }
 
@@ -2567,6 +2596,7 @@ function renderCls(){
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
         <span class="badge ${niv[c.nivel]||'b-gray'}">${c.nivel||'Nuevo'}</span>
         <div style="display:flex;gap:4px">
+          <button class="btn ico sm" onclick="editCliente('${c.id}')" title="Editar">✏️</button>
           <button class="btn ico sm danger" onclick="delCl('${c.id}')">🗑️</button>
         </div>
       </div>
@@ -2580,13 +2610,79 @@ function renderClSelects(){
   const gcEl=document.getElementById('gc-cl');if(gcEl)gcEl.innerHTML='<option value="">General</option>'+opts;
 }
 
+function openNuevoCliente(){
+  document.getElementById('m-cl-title').textContent = 'Nuevo cliente';
+  document.getElementById('cl-edit-id').value = '';
+  ['cl-nm','cl-tel','cl-email','cl-social','cl-notas'].forEach(id=>{
+    const e=document.getElementById(id); if(e) e.value='';
+  });
+  document.getElementById('cl-bday').value='';
+  document.getElementById('cl-nivel').value='Nuevo';
+  document.getElementById('cl-del-btn').style.display='none';
+  openM('m-nuevo-cl');
+  setTimeout(()=>document.getElementById('cl-nm').focus(),80);
+}
+
+function editCliente(id){
+  const cl=DB.clientes.find(x=>x.id===id); if(!cl) return;
+  document.getElementById('m-cl-title').textContent = 'Editar cliente';
+  document.getElementById('cl-edit-id').value = id;
+  document.getElementById('cl-nm').value   = cl.nombre||'';
+  document.getElementById('cl-tel').value  = cl.tel||'';
+  document.getElementById('cl-email').value= cl.email||'';
+  document.getElementById('cl-bday').value = cl.bday||'';
+  document.getElementById('cl-notas').value= cl.notas||'';
+  document.getElementById('cl-social').value= cl.social||'';
+  document.getElementById('cl-nivel').value= cl.nivel||'Nuevo';
+  document.getElementById('cl-del-btn').style.display='inline-flex';
+  openM('m-nuevo-cl');
+  setTimeout(()=>document.getElementById('cl-nm').focus(),80);
+}
+
 function saveCliente(){
   const nm=(document.getElementById('cl-nm').value||'').trim();
   if(!nm){toast('Nombre requerido','err');return;}
-  DB.clientes.push({id:String(Date.now()),nombre:nm,tel:document.getElementById('cl-tel').value,email:document.getElementById('cl-email').value,bday:document.getElementById('cl-bday').value,notas:document.getElementById('cl-notas').value,visitas:0,gasto:0,nivel:'Nuevo'});
-  sbSave('clientes', cl);closeM('m-nuevo-cl');renderCls();renderClSelects();populateCitaSels();toast('✓ Cliente registrado','ok');
+  const editId = document.getElementById('cl-edit-id').value;
+  const cl = editId
+    ? {...DB.clientes.find(x=>x.id===editId)}
+    : {id:String(Date.now()), visitas:0, gasto:0, ts:Date.now()};
+  cl.nombre = nm;
+  cl.tel    = document.getElementById('cl-tel').value.trim();
+  cl.email  = document.getElementById('cl-email').value.trim();
+  cl.bday   = document.getElementById('cl-bday').value;
+  cl.notas  = document.getElementById('cl-notas').value.trim();
+  cl.social = document.getElementById('cl-social').value.trim();
+  cl.nivel  = document.getElementById('cl-nivel').value||'Nuevo';
+  if(editId){
+    const idx=DB.clientes.findIndex(x=>x.id===editId);
+    if(idx>=0) DB.clientes[idx]=cl; else DB.clientes.push(cl);
+    toast('✓ Cliente actualizado','ok');
+  } else {
+    DB.clientes.push(cl);
+    toast('✓ Cliente registrado','ok');
+  }
+  sbSave('clientes', cl);
+  closeM('m-nuevo-cl');
+  renderCls();renderClSelects();populateCitaSels();
 }
-function delCl(id){if(!confirm('¿Eliminar cliente?'))return;DB.clientes=DB.clientes.filter(c=>c.id!==id);sDB('clientes');renderCls();toast('Eliminado');}
+
+function delClFromModal(){
+  const id=document.getElementById('cl-edit-id').value; if(!id) return;
+  if(!confirm('¿Eliminar este cliente?')) return;
+  DB.clientes=DB.clientes.filter(c=>c.id!==id);
+  sbDel('clientes',id);
+  closeM('m-nuevo-cl');
+  renderCls();
+  toast('Cliente eliminado');
+}
+
+function delCl(id){
+  if(!confirm('¿Eliminar cliente?'))return;
+  DB.clientes=DB.clientes.filter(c=>c.id!==id);
+  sbDel('clientes',id);
+  renderCls();
+  toast('Eliminado');
+}
 
 // ══════════════════════════════════════
 // PERSONAL
@@ -2912,7 +3008,6 @@ function loadCfgForms(){
   const set=(id,v)=>{const e=g(id);if(e)e.value=v||'';}
   set('cfg-salon',c.salon);set('cfg-tel',c.tel);set('cfg-dir',c.dir);set('cfg-email',c.email);set('cfg-owner',c.owner);set('cfg-hora',c.horario);
   set('tax-nm',c.taxNm);set('tax-pct',c.taxPct||0);set('tax-mode',c.taxMode||'no');set('tax-apply',c.taxApply||'all');
-  set('gs-url',c.gsUrl);
 }
 
 function saveCfgGeneral(){
@@ -2999,10 +3094,7 @@ function saveTax(){
   sCfg();toast('✓ Impuestos guardados','ok');
 }
 
-function saveGSConf(){
-  DB.config.gsUrl=(document.getElementById('gs-url')?.value||'').trim();
-  sCfg();updateGoogleStatus();toast('✓ Google Sheets configurado','ok');
-}
+// saveGSConf removed — Sheets integration replaced by Supabase
 
 function renderSysInfo(){
   const s=id=>document.getElementById(id);
@@ -3017,18 +3109,27 @@ function renderSysInfo(){
 // GOOGLE
 // ══════════════════════════════════════
 function updateGoogleStatus(){
-  const has=!!DB.config.gsUrl;
-  const gsDot=document.getElementById('gs-dot');const gsSt=document.getElementById('gs-st');
-  if(gsDot){gsDot.classList.toggle('on',has);}
-  if(gsSt)gsSt.textContent=has?'Conectado':'Desconectado';
-  const gsUrl=document.getElementById('gs-url');if(gsUrl)gsUrl.value=DB.config.gsUrl||'';
+  // Calendar
+  const hasCalendar = !!DB.config.gcScriptUrl;
+  const gcDot=document.getElementById('gc-dot'); const gcSt=document.getElementById('gc-st');
+  if(gcDot) gcDot.classList.toggle('on', hasCalendar);
+  if(gcSt) gcSt.textContent = hasCalendar ? 'Conectado' : 'Sin configurar';
+  const gcInp = document.getElementById('gc-script-url');
+  if(gcInp) gcInp.value = DB.config.gcScriptUrl||'';
+  // Gmail
+  const hasGmail = !!(DB.config.gmFrom || DB.config.gmScript);
+  const gmDot=document.getElementById('gm-dot'); const gmSt=document.getElementById('gm-st');
+  if(gmDot) gmDot.classList.toggle('on', hasGmail);
+  if(gmSt) gmSt.textContent = hasGmail ? 'Configurado' : 'Sin configurar';
 }
 
-async function sendToSheets(v){
-  if(!DB.config.gsUrl)return;
-  try{await fetch(DB.config.gsUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(v)});toast('📊 Venta → Sheets','ok');}
-  catch{toast('Sin conexión — guardado local','w');}
+function saveCalendarConf(){
+  DB.config.gcScriptUrl = (document.getElementById('gc-script-url')?.value||'').trim();
+  sCfg(); updateGoogleStatus();
+  toast(DB.config.gcScriptUrl ? '✓ Calendar conectado' : 'URL borrada','ok');
 }
+
+// sendToSheets removed — data stored in Supabase
 
 
 // ══════════════════════════════════════
@@ -3142,53 +3243,95 @@ function recMsgEdited(){
   if(recCanal==='gm'||recCanal==='both') document.getElementById('rec-gm-body').textContent = v;
 }
 
-function enviarRecordatorio(){
+async function enviarRecordatorio(){
   const citaId = document.getElementById('rec-cita-id').value;
   const cita = DB.citas.find(x=>x.id===citaId); if(!cita) return;
   const cl = DB.clientes.find(x=>x.nombre===cita.cliente)||{};
   const editMsg = document.getElementById('rec-msg-edit').value;
-  const gmSubj = fillTpl(getTpl('gm_asunto',TPL_GM_ASUNTO_DEFAULT), cita);
+  const gmSubj  = fillTpl(getTpl('gm_asunto', TPL_GM_ASUNTO_DEFAULT), cita);
+
+  // Disable button while sending
+  const btn = document.querySelector('#m-recordatorio .btn.t');
+  if(btn){ btn.disabled=true; btn.textContent='Enviando...'; }
+
   let sent = false;
 
+  // ── WhatsApp ──
   if(recCanal==='wa'||recCanal==='both'){
     const tel = (cl.tel||'').replace(/[^0-9+]/g,'');
     const msg = (recCanal==='wa'&&editMsg) ? editMsg : fillTpl(getTpl('wa_body',TPL_WA_DEFAULT), cita);
-    if(!tel){ toast('⚠ El cliente no tiene teléfono registrado','err'); if(recCanal==='wa') return; }
-    else {
-      const url = 'https://wa.me/'+tel+'?text='+encodeURIComponent(msg);
-      window.open(url,'_blank');
-      markSent(citaId,'wa'); sent=true;
+    if(!tel){
+      toast('⚠ El cliente no tiene teléfono registrado','err');
+      if(recCanal==='wa'){ resetRecBtn(btn); return; }
+    } else {
+      window.open('https://wa.me/'+tel+'?text='+encodeURIComponent(msg),'_blank');
+      markSent(citaId,'wa');
       addNotifHist('wa', cita.cliente, cita.fecha, cita.hora);
+      sent = true;
     }
   }
 
+  // ── Gmail via Apps Script ──
   if(recCanal==='gm'||recCanal==='both'){
-    const email = cl.email||'';
-    const body = (recCanal==='gm'&&editMsg) ? editMsg : fillTpl(getTpl('gm_body',TPL_GM_BODY_DEFAULT), cita);
-    const gsScript = DB.config.gmScript||'';
-    if(gsScript){
-      // Send via Apps Script
-      fetch(gsScript, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({action:'sendEmail', to:email, subject:gmSubj, body:body})
-      }).catch(()=>{});
-      toast('✉️ Email enviado via Apps Script','ok');
+    const email     = (cl.email||'').trim();
+    const body      = (recCanal==='gm'&&editMsg) ? editMsg : fillTpl(getTpl('gm_body',TPL_GM_BODY_DEFAULT), cita);
+    const gsScript  = (DB.config.gmScript||'').trim();
+    const htmlBody  = '<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#222">'
+                    + body.replace(/\n/g,'<br>') + '</div>';
+
+    if(!email){
+      toast('⚠ El cliente no tiene email registrado','err');
+      if(recCanal==='gm'){ resetRecBtn(btn); return; }
+    } else if(!gsScript){
+      // Fallback mailto si no hay script configurado
+      const mailto = 'mailto:'+email+'?subject='+encodeURIComponent(gmSubj)+'&body='+encodeURIComponent(body);
+      window.location.href = mailto;
+      markSent(citaId,'gm');
+      addNotifHist('gm', cita.cliente, cita.fecha, cita.hora);
+      sent = true;
     } else {
-      // Fallback: mailto
-      if(!email){ toast('⚠ El cliente no tiene email registrado','err'); if(recCanal==='gm') return; }
-      else {
-        const mailto = 'mailto:'+email+'?subject='+encodeURIComponent(gmSubj)+'&body='+encodeURIComponent(body);
-        window.location.href = mailto;
+      // Envío real via Apps Script — usar texto plano como URL param para evitar CORS preflight
+      try {
+        const params = new URLSearchParams({
+          action : 'sendEmail',
+          to     : email,
+          subject: gmSubj,
+          body   : body,
+          html   : htmlBody
+        });
+        // Apps Script acepta GET con parámetros para evitar el problema de CORS en POST
+        const resp = await fetch(gsScript + '?' + params.toString(), {
+          method : 'GET',
+          redirect: 'follow'
+        });
+        const text = await resp.text();
+        let result = {};
+        try { result = JSON.parse(text); } catch(e){ result = {ok: true}; }
+
+        if(result.ok === false){
+          toast('❌ Error al enviar: ' + (result.error||'revisa el script'),'err');
+          resetRecBtn(btn); return;
+        }
+        markSent(citaId,'gm');
+        addNotifHist('gm', cita.cliente, cita.fecha, cita.hora);
+        sent = true;
+      } catch(err){
+        toast('❌ No se pudo conectar con Apps Script: '+err.message,'err');
+        resetRecBtn(btn); return;
       }
     }
-    markSent(citaId,'gm'); sent=true;
-    addNotifHist('gm', cita.cliente, cita.fecha, cita.hora);
   }
 
+  resetRecBtn(btn);
   if(sent){
     closeM('m-recordatorio');
     renderAgendaTb();
     toast('✅ Recordatorio enviado','ok');
   }
+}
+
+function resetRecBtn(btn){
+  if(btn){ btn.disabled=false; btn.textContent='📤 Enviar recordatorio'; }
 }
 
 function markSent(citaId, canal){
@@ -3371,8 +3514,24 @@ async function sbConfirmReset(){
 
 
 function syncGoogle(){toast('🔄 Sincronizando...','');setTimeout(()=>toast('✅ Sincronizado','ok'),1800);}
-function syncCalendar(){if(DB.config.gsUrl)toast('📅 Agenda → Calendar','ok');else toast('Configura Google Suite primero','w');}
-function exportToSheets(){toast('📤 Exportando a Sheets...','');setTimeout(()=>toast('✅ Exportado','ok'),1600);}
+function syncCalendar(){
+  const url = DB.config.gcScriptUrl;
+  if(!url){ toast('Configura la URL de Apps Script en Integraciones','w'); return; }
+  const citas = DB.citas.map(c=>({cliente:c.cliente,fecha:c.fecha,hora:c.hora,servicio:c.servicio,estilista:c.estilista,duracion:c.duracion||'60',notas:c.notas||''}));
+  // Apps Script: enviar citas como JSON en un POST normal (sin no-cors)
+  fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action:'syncCalendar', citas})
+  })
+  .then(r => r.json())
+  .then(result => {
+    if(result.ok) toast('📅 ' + (result.msg||'Citas sincronizadas con Calendar'), 'ok');
+    else toast('⚠ Calendar: ' + (result.error||'error desconocido'), 'err');
+  })
+  .catch(err => toast('❌ No se pudo conectar con Apps Script: ' + err.message, 'err'));
+}
+function exportToSheets(){toast('Usa el botón Excel para exportar datos','w');}
 
 // ══════════════════════════════════════
 // EXCEL EXPORT
@@ -3696,8 +3855,6 @@ function renderGastos(){
 <!-- ══════════════════════════════════════
      INIT
 ══════════════════════════════════════ -->
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
 
 <script>
 // ══════════════════════════════════════
